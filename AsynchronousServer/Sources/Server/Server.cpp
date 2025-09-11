@@ -11,23 +11,21 @@ namespace clientServerApp
 {
 	server::server(std::shared_ptr<io_context> A_ioContextPtr, std::string& A_Address, short A_PortNumber, std::mutex& A_mtx)
 		: m_ioContextPtr(A_ioContextPtr),
-		m_Address(A_Address),
-		m_portNumber(static_cast<short>(A_PortNumber)),
-		m_mtx(A_mtx)
+		  m_mtx(A_mtx)
 	{
-		create_acceptor();
+		create_acceptor(A_ioContextPtr, A_Address, A_PortNumber);
 	}
 
-	void server::create_acceptor()
+	void server::create_acceptor(std::shared_ptr<io_context> A_ioContextPtr, std::string& A_Address, short A_PortNumber)
 	{
 		error_code errorCode;
-		const auto& address = ip::make_address(m_Address, errorCode);
+		const auto& address = ip::make_address(A_Address, errorCode);
 
 		if (errorCode)
 			return;
 
 		m_ptrAcceptor = std::make_shared<ip::tcp::acceptor>(*m_ioContextPtr,
-			ip::tcp::endpoint(address, m_portNumber),
+			ip::tcp::endpoint(address, A_PortNumber),
 			false);
 	}
 
