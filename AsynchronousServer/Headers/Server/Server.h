@@ -13,7 +13,7 @@ namespace clientServerApp
 		virtual void do_accept() override;
 
 	private:
-		virtual void create_connector();
+		virtual void create_acceptor();
 		virtual void handle_connection(const error_code& A_errorCode);
 
 		std::shared_ptr<ip::tcp::acceptor> m_ptrAcceptor;

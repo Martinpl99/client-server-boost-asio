@@ -15,10 +15,10 @@ namespace clientServerApp
 		m_portNumber(static_cast<short>(A_PortNumber)),
 		m_mtx(A_mtx)
 	{
-		create_connector();
+		create_acceptor();
 	}
 
-	void server::create_connector()
+	void server::create_acceptor()
 	{
 		error_code errorCode;
 		const auto& address = ip::make_address(m_Address, errorCode);
