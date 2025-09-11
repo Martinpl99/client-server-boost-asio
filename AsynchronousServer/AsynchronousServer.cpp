@@ -1,14 +1,10 @@
 // AsynchronousServer.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 #include <iostream>
-#include <boost/asio.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
-#include <boost/thread/mutex.hpp>
-#include <boost/bind.hpp>
-#include <boost/lexical_cast.hpp>
 #include "headers/server/server.h"
-
+#include "headers/thread_worker.h"
 std::mutex mtx;
 using namespace boost::asio;
 using namespace boost;
@@ -74,24 +70,16 @@ int main()
     auto io_ctx_executor = io_ctx->get_executor();
     auto worker = make_work_guard(io_ctx_executor);
 
-    thread_group threads;
+    auto threadWorker = std::make_shared<clientServerApp::thread_worker>(io_ctx, mtx);
+    threadWorker->set_number_of_threads(4);
+    auto runningThreads = threadWorker->run_threads();
 
-    for (size_t index = 0; index < 5; index++)
-        threads.create_thread([=] {WorkerThread(io_ctx, index); });
-
-    try
-    {
-        auto server = std::make_shared<clientServerApp::server>(*io_ctx, address, static_cast<short>(portNumber));
-        server->do_accept();
-    }
-    catch (std::exception& A_exception)
-    {
-        std::cout << A_exception.what() << std::endl;
-    }
+    auto server = std::make_shared<clientServerApp::server>(*io_ctx, address, static_cast<short>(portNumber), mtx);
+    server->do_accept();
 
     std::cin.get();
 
-    threads.join_all();
+    runningThreads->join_all();
 
     return 0;
 }

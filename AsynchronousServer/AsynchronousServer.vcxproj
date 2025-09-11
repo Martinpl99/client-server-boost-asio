@@ -131,10 +131,12 @@
   <ItemGroup>
     <ClCompile Include="AsynchronousServer.cpp" />
     <ClCompile Include="sources\server\server.cpp" />
+    <ClCompile Include="sources\thread_worker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\server\iServer.h" />
     <ClInclude Include="headers\server\server.h" />
+    <ClInclude Include="headers\thread_worker.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

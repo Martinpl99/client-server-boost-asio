@@ -21,12 +21,18 @@
     <ClCompile Include="sources\server\server.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="sources\thread_worker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\server\server.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="headers\server\iServer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\thread_worker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

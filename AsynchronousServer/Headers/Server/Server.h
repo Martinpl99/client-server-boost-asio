@@ -9,7 +9,7 @@ namespace clientServerApp
 	class server : public iServer
 	{
 	public:
-		server(io_context& A_ioContext, std::string& A_Address, short A_PortNumber);
+		server(io_context& A_ioContext, std::string& A_Address, short A_PortNumber, std::mutex& A_mtx);
 		virtual void do_accept() override;
 
 	private:
@@ -20,5 +20,6 @@ namespace clientServerApp
 		io_context& m_ioContext;
 		const std::string& m_Address;
 		const short m_portNumber;
+		std::mutex& m_mtx;
 	};
 }

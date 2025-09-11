@@ -9,8 +9,11 @@ using namespace boost::system;
 
 namespace clientServerApp
 {
-	server::server(io_context& A_ioContext, std::string& A_Address, short A_PortNumber)
-		: m_ioContext(A_ioContext), m_Address(A_Address), m_portNumber(static_cast<short>(A_PortNumber))
+	server::server(io_context& A_ioContext, std::string& A_Address, short A_PortNumber, std::mutex& A_mtx)
+		: m_ioContext(A_ioContext),
+		m_Address(A_Address),
+		m_portNumber(static_cast<short>(A_PortNumber)),
+		m_mtx(A_mtx)
 	{
 		create_connector();
 	}
@@ -21,7 +24,7 @@ namespace clientServerApp
 		const auto& address = ip::make_address(m_Address, errorCode);
 
 		if (errorCode)
-			throw std::runtime_error("Wrong address");
+			return;
 
 		m_ptrAcceptor = std::make_shared<ip::tcp::acceptor>(m_ioContext,
 			ip::tcp::endpoint(address, m_portNumber),
@@ -32,7 +35,10 @@ namespace clientServerApp
 	{
 		if (!A_errorCode)
 		{
+			m_mtx.lock();
 			std::cout << "Accepted! from thread: "<< std::this_thread::get_id() << "\n";
+			m_mtx.unlock();
+
 			do_accept();
 			std::this_thread::sleep_for(chrono::seconds(10));
 		}
