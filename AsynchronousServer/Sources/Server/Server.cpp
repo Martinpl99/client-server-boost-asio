@@ -39,6 +39,21 @@ namespace clientServerApp
 			std::cout << "Accepted! from thread: "<< std::this_thread::get_id() << "\n";
 			m_mtx.unlock();
 
+			auto strand = make_strand(m_ioContext.get_executor());
+
+			auto strand1 = [&](size_t A_strandNumber)
+			{
+				m_mtx.lock();
+				std::cout << "Strand "<< A_strandNumber << "\n";
+				m_mtx.unlock();
+			};
+
+			strand.post([&] {strand1(1); }, get_associated_allocator(strand1));
+			strand.post([&] {strand1(2); }, get_associated_allocator(strand1));
+			strand.post([&] {strand1(3); }, get_associated_allocator(strand1));
+			strand.post([&] {strand1(4); }, get_associated_allocator(strand1));
+			strand.post([&] {strand1(5); }, get_associated_allocator(strand1));
+
 			do_accept();
 			std::this_thread::sleep_for(chrono::seconds(10));
 		}
