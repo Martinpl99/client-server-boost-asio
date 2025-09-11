@@ -9,8 +9,8 @@ using namespace boost::system;
 
 namespace clientServerApp
 {
-	server::server(io_context& A_ioContext, std::string& A_Address, short A_PortNumber, std::mutex& A_mtx)
-		: m_ioContext(A_ioContext),
+	server::server(std::shared_ptr<io_context> A_ioContextPtr, std::string& A_Address, short A_PortNumber, std::mutex& A_mtx)
+		: m_ioContextPtr(A_ioContextPtr),
 		m_Address(A_Address),
 		m_portNumber(static_cast<short>(A_PortNumber)),
 		m_mtx(A_mtx)
@@ -26,7 +26,7 @@ namespace clientServerApp
 		if (errorCode)
 			return;
 
-		m_ptrAcceptor = std::make_shared<ip::tcp::acceptor>(m_ioContext,
+		m_ptrAcceptor = std::make_shared<ip::tcp::acceptor>(*m_ioContextPtr,
 			ip::tcp::endpoint(address, m_portNumber),
 			false);
 	}
@@ -39,7 +39,7 @@ namespace clientServerApp
 			std::cout << "Accepted! from thread: "<< std::this_thread::get_id() << "\n";
 			m_mtx.unlock();
 
-			auto strand = make_strand(m_ioContext.get_executor());
+			auto strand = make_strand(m_ioContextPtr->get_executor());
 
 			auto strand1 = [&](size_t A_strandNumber)
 			{

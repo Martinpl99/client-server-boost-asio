@@ -25,7 +25,7 @@ int main()
     threadWorker->set_number_of_threads(4);
     auto runningThreads = threadWorker->run_threads();
 
-    clientServerApp::server server(*io_ctx, address, static_cast<short>(portNumber), main_mutex);
+    clientServerApp::server server(io_ctx, address, static_cast<short>(portNumber), main_mutex);
     server.do_accept();
 
     std::cin.get();
