@@ -81,9 +81,6 @@ int main()
     for (size_t index = 0; index < 1; index++)
         threads.create_thread([=] {WorkerThread(io_ctx, index); });
 
-    //auto socket = std::make_shared<boost::asio::ip::tcp::socket>(*io_ctx);
-    //auto acceptor = std::make_shared<ip::tcp::acceptor>(*io_ctx);
-
     boost::asio::ip::tcp::resolver resolver(*io_ctx);
     auto iterator = resolver.resolve("127.0.0.1", "4444");
     auto& endpoint = *iterator.begin();
@@ -94,45 +91,9 @@ int main()
     std::cout << "Listening on: " << endpoint.endpoint() << "\n";
     mtx.unlock();
 
-    //io_ctx->run();
-    //try
-    //{
-    //    acceptor->open(ip::tcp::v4());
-    //    acceptor->set_option(boost::asio::ip::tcp::acceptor::reuse_address(false));
-    //    acceptor->bind(endpoint.endpoint());
-    //    acceptor->listen(boost::asio::socket_base::max_listen_connections);
-    //    acceptor->async_accept(*socket, [=](error_code ec)
-    //        {
-    //            OnAccept(ec, *socket, acceptor);
-    //        });
-
-    //    std::cout << "Listening on: " << endpoint.endpoint() << "\n";
-    //    mtx.unlock();
-    //}
-    //catch (const std::exception&)
-    //{
-
-    //}
-
-    //clientServerApp::server(*io_ctx, endpoint.endpoint());
     std::cin.get();
-
-    //error_code ec;
-    //socket->shutdown(boost::asio::ip::tcp::socket::shutdown_both, ec);
-    //socket->close();
 
     threads.join_all();
 
     return 0;
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
