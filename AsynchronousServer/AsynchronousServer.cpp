@@ -79,8 +79,15 @@ int main()
     for (size_t index = 0; index < 5; index++)
         threads.create_thread([=] {WorkerThread(io_ctx, index); });
 
-    auto server = std::make_shared<clientServerApp::server>(*io_ctx, address, static_cast<short>(portNumber));
-    server->do_accept();
+    try
+    {
+        auto server = std::make_shared<clientServerApp::server>(*io_ctx, address, static_cast<short>(portNumber));
+        server->do_accept();
+    }
+    catch (std::exception& A_exception)
+    {
+        std::cout << A_exception.what() << std::endl;
+    }
 
     std::cin.get();
 

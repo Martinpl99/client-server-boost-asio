@@ -2,6 +2,7 @@
 #include <iostream>
 #include <boost/asio.hpp>
 #include <boost/asio/ip/address.hpp>
+#include <stdexcept>
 
 using namespace boost::asio;
 using namespace boost::system;
@@ -20,7 +21,7 @@ namespace clientServerApp
 		const auto& address = ip::make_address(m_Address, errorCode);
 
 		if (errorCode)
-			return;
+			throw std::runtime_error("Wrong address");
 
 		m_ptrAcceptor = std::make_shared<ip::tcp::acceptor>(m_ioContext,
 			ip::tcp::endpoint(address, m_portNumber),
