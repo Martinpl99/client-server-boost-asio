@@ -18,12 +18,15 @@
     <ClCompile Include="AsynchronousServer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Server\Server.cpp">
+    <ClCompile Include="sources\server\server.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Headers\Server\Server.h">
+    <ClInclude Include="headers\server\server.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\server\iServer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

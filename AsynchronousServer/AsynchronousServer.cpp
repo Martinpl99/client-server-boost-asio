@@ -7,7 +7,7 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
-#include"Headers/Server/Server.h"
+#include "headers/server/server.h"
 
 std::mutex mtx;
 using namespace boost::asio;
@@ -65,31 +65,22 @@ void OnAccept(const error_code& ec,
     }
 }
 
+std::string address("127.0.0.1");
+constexpr auto portNumber = 4444;
+
 int main()
 {
     auto io_ctx = std::make_shared<io_context>();
     auto io_ctx_executor = io_ctx->get_executor();
     auto worker = make_work_guard(io_ctx_executor);
-    auto strandQueue = make_strand(*io_ctx);
-
-    mtx.lock();
-    std::cout << "Press ENTER to EXIT!\n";
-    mtx.unlock();
 
     thread_group threads;
 
-    for (size_t index = 0; index < 1; index++)
+    for (size_t index = 0; index < 5; index++)
         threads.create_thread([=] {WorkerThread(io_ctx, index); });
 
-    boost::asio::ip::tcp::resolver resolver(*io_ctx);
-    auto iterator = resolver.resolve("127.0.0.1", "4444");
-    auto& endpoint = *iterator.begin();
-
-    auto server = std::make_shared<clientServerApp::server>(*io_ctx, endpoint);
-
-    mtx.lock();
-    std::cout << "Listening on: " << endpoint.endpoint() << "\n";
-    mtx.unlock();
+    auto server = std::make_shared<clientServerApp::server>(*io_ctx, address, static_cast<short>(portNumber));
+    server->do_accept();
 
     std::cin.get();
 
