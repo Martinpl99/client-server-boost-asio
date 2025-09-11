@@ -11,7 +11,7 @@ namespace clientServerApp
 
 	private:
 		void do_accept();
-		void handle_connection(const error_code& A_errorCode, ip::tcp::socket A_socket);
+		void handle_connection(const error_code& A_errorCode);
 
 		std::shared_ptr<ip::tcp::acceptor> m_ptrAcceptor;
 	};

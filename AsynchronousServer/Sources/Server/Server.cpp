@@ -14,7 +14,7 @@ namespace clientServerApp
 		do_accept();
 	}
 
-	void server::handle_connection(const error_code& A_errorCode, ip::tcp::socket A_socket)
+	void server::handle_connection(const error_code& A_errorCode)
 	{
 		if (!A_errorCode)
 		{
@@ -29,9 +29,9 @@ namespace clientServerApp
 
 	void server::do_accept()
 	{
-		m_ptrAcceptor->async_accept([this](error_code A_errorCode, ip::tcp::socket A_socket)
+		m_ptrAcceptor->async_accept([this](error_code A_errorCode)
 			{
-				handle_connection(A_errorCode, std::move(A_socket));
+				handle_connection(A_errorCode);
 			});
 	}
 }
