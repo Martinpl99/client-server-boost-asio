@@ -2,12 +2,13 @@
 #include <mutex>
 #include<boost/asio.hpp>
 #include <boost/thread.hpp>
+#include "serverLibDll.h"
 
 using namespace boost::asio;
 
 namespace clientServerApp
 {
-	class thread_worker
+	class SERVER_LIB_DLL_EXPORT thread_worker
 	{
 	public:
 		thread_worker(std::shared_ptr<io_context> A_ioContextPtr, std::mutex& A_mtx);

@@ -3,6 +3,7 @@
 #include <boost/asio.hpp>
 #include <boost/asio/ip/address.hpp>
 #include <stdexcept>
+#include "../../headers/server/session.h"
 
 using namespace boost::asio;
 using namespace boost::system;
@@ -29,7 +30,7 @@ namespace clientServerApp
 			false);
 	}
 
-	void server::handle_connection(const error_code& A_errorCode)
+	void server::handle_connection(const error_code& A_errorCode, ip::tcp::socket A_socket)
 	{
 		if (!A_errorCode)
 		{
@@ -37,23 +38,9 @@ namespace clientServerApp
 			std::cout << "Accepted! from thread: "<< std::this_thread::get_id() << "\n";
 			m_mtx.unlock();
 
-			auto strand = make_strand(m_ioContextPtr->get_executor());
-
-			auto strand1 = [&](size_t A_strandNumber)
-			{
-				m_mtx.lock();
-				std::cout << "Strand "<< A_strandNumber << "\n";
-				m_mtx.unlock();
-			};
-
-			strand.post([&] {strand1(1); }, get_associated_allocator(strand1));
-			strand.post([&] {strand1(2); }, get_associated_allocator(strand1));
-			strand.post([&] {strand1(3); }, get_associated_allocator(strand1));
-			strand.post([&] {strand1(4); }, get_associated_allocator(strand1));
-			strand.post([&] {strand1(5); }, get_associated_allocator(strand1));
+			std::make_shared<clientServerApp::session>(std::move(A_socket), m_mtx)->run();
 
 			do_accept();
-			std::this_thread::sleep_for(chrono::seconds(10));
 		}
 		else
 		{
@@ -65,7 +52,7 @@ namespace clientServerApp
 	{
 		m_ptrAcceptor->async_accept([this](error_code A_errorCode, ip::tcp::socket A_socket)
 			{
-				handle_connection(A_errorCode);
+				handle_connection(A_errorCode, std::move(A_socket));
 			});
 	}
 }

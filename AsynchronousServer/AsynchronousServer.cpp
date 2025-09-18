@@ -4,7 +4,8 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
 #include "headers/server/server.h"
-#include "headers/thread_worker.h"
+#include "thread_worker.h"
+
 using namespace boost::asio;
 using namespace boost;
 using namespace boost::system;

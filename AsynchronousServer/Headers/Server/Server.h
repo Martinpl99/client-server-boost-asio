@@ -14,10 +14,10 @@ namespace clientServerApp
 
 	private:
 		virtual void create_acceptor(std::shared_ptr<io_context> A_ioContextPtr, std::string& A_Address, short A_PortNumber);
-		virtual void handle_connection(const error_code& A_errorCode);
+		virtual void handle_connection(const error_code& A_errorCode, ip::tcp::socket A_socket);
 
-		std::shared_ptr<ip::tcp::acceptor> m_ptrAcceptor;
-		std::shared_ptr<io_context> m_ioContextPtr;
+		std::shared_ptr<ip::tcp::acceptor> m_ptrAcceptor = nullptr;
+		std::shared_ptr<io_context> m_ioContextPtr = nullptr;
 		std::mutex& m_mtx;
 	};
 }

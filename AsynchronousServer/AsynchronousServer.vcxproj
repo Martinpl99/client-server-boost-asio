@@ -104,12 +104,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\boost_1_89_0;%(AdditionalLibraryDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\mmroz\Desktop\BoostASIO\ServerLib\headers;C:\boost_1_89_0;%(AdditionalLibraryDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\boost_1_89_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\mmroz\Desktop\BoostASIO\BoostASIO\x64\Debug;C:\boost_1_89_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ServerLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -131,12 +132,12 @@
   <ItemGroup>
     <ClCompile Include="AsynchronousServer.cpp" />
     <ClCompile Include="sources\server\server.cpp" />
-    <ClCompile Include="sources\thread_worker.cpp" />
+    <ClCompile Include="sources\server\session.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\server\iServer.h" />
     <ClInclude Include="headers\server\server.h" />
-    <ClInclude Include="headers\thread_worker.h" />
+    <ClInclude Include="headers\server\session.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -21,7 +21,7 @@
     <ClCompile Include="sources\server\server.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sources\thread_worker.cpp">
+    <ClCompile Include="sources\server\session.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -32,7 +32,7 @@
     <ClInclude Include="headers\server\iServer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\thread_worker.h">
+    <ClInclude Include="headers\server\session.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

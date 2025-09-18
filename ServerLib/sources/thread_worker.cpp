@@ -41,7 +41,6 @@ namespace clientServerApp
 
 		while (true)
 		{
-			io_context::count_type tasks;
 			try
 			{
 				const auto& tasks = m_io_contextPtr->run();

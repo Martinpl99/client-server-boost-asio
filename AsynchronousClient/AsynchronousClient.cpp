@@ -8,18 +8,20 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
+#include "thread_worker.h"
 
-std::mutex mtx;
 using namespace boost::asio;
 using namespace boost;
 using namespace boost::system;
 
+std::mutex main_mutex;
+
 void WorkerThread(std::shared_ptr<io_context>
     iosvc, int counter)
 {
-    mtx.lock();
+    main_mutex.lock();
     std::cout << "Thread: " << counter << " Start.\n";
-    mtx.unlock();
+    main_mutex.unlock();
 
     while (true)
     {
@@ -30,29 +32,29 @@ void WorkerThread(std::shared_ptr<io_context>
         }
         catch (const std::exception& ex)
         {
-            mtx.lock();
+            main_mutex.lock();
             std::cout << "Message: " << ex.what() << "\n";
-            mtx.unlock();
+            main_mutex.unlock();
         }
 
         break;
     }
 
-    mtx.lock();
+    main_mutex.lock();
     std::cout << "Thread: " << counter << " End.\n";
-    mtx.unlock();
+    main_mutex.unlock();
 }
 
 void OnConnect(const error_code& ec) {
     if (ec) {
-        mtx.lock();
+        main_mutex.lock();
         std::cout << "OnConnect Error: " << ec << ".\n";
-        mtx.unlock();
+        main_mutex.unlock();
     }
     else {
-        mtx.lock();
+        main_mutex.lock();
         std::cout << "Connected!.\n";
-        mtx.unlock();
+        main_mutex.unlock();
     }
 }
 
@@ -63,14 +65,9 @@ int main()
     auto worker = make_work_guard(io_ctx_executor);
     auto strandQueue = make_strand(*io_ctx);
 
-    mtx.lock();
-    std::cout << "Press ENTER to EXIT!\n";
-    mtx.unlock();
-
-    thread_group threads;
-
-    for (size_t index = 0; index < 2; index++)
-        threads.create_thread([=] {WorkerThread(io_ctx, index); });
+    auto threadWorker = std::make_shared<clientServerApp::thread_worker>(io_ctx, main_mutex);
+    threadWorker->set_number_of_threads(4);
+    auto runningThreads = threadWorker->run_threads();
 
     auto socket = std::make_shared< boost::asio::ip::tcp::socket>(*io_ctx);
 
@@ -81,9 +78,9 @@ int main()
         auto iterator = resolver.resolve("www.packtpub.com", "80");
         const auto& endpoint = *iterator.begin();
 
-        mtx.lock();
+        main_mutex.lock();
         std::cout << "Connecting to: " << endpoint.endpoint() << "\n";
-        mtx.unlock();
+        main_mutex.unlock();
 
         socket->async_connect(endpoint, [](const error_code& ec) { OnConnect(ec); });
     }
@@ -98,7 +95,7 @@ int main()
     socket->close();
 
     io_ctx->stop();
-    threads.join_all();
+    runningThreads->join_all();
 
     return 0;
 }
